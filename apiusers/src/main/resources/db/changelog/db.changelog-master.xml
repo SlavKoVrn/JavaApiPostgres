@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <!-- Changeset to create tables -->
+    <changeSet id="1" author="you">
+        <createTable tableName="roles">
+            <column name="uuid" type="SERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="rolename" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="users">
+            <column name="uuid" type="SERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="fio" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="phonenumber" type="VARCHAR(255)"/>
+            <column name="avatar" type="VARCHAR(255)"/>
+            <column name="role" type="INTEGER">
+                <constraints foreignKeyName="fk_users_roles" references="roles(uuid)"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- Changeset to insert roles -->
+    <changeSet id="2" author="you">
+        <insert tableName="roles">
+            <column name="rolename" value="ADMIN"/>
+        </insert>
+        <insert tableName="roles">
+            <column name="rolename" value="USER"/>
+        </insert>
+        <insert tableName="roles">
+            <column name="rolename" value="MODERATOR"/>
+        </insert>
+    </changeSet>
+
+    <!-- Changeset to insert users -->
+    <changeSet id="3" author="you">
+        <insert tableName="users">
+            <column name="fio" value="Иван Иванов"/>
+            <column name="phonenumber" value="+7(900)123-45-67"/>
+            <column name="avatar" value="https://www.kadastrcard.ru/img/avatar1.png"/>
+            <column name="role" value="1"/>
+        </insert>
+        <insert tableName="users">
+            <column name="fio" value="Петр Петров"/>
+            <column name="phonenumber" value="+7(987)654-32-10"/>
+            <column name="avatar" value="https://www.kadastrcard.ru/img/avatar2.png"/>
+            <column name="role" value="2"/>
+        </insert>
+        <insert tableName="users">
+            <column name="fio" value="Сидор Сидоров"/>
+            <column name="phonenumber" value="+7(912)345-67-89"/>
+            <column name="avatar" value="https://www.kadastrcard.ru/img/avatar3.png"/>
+            <column name="role" value="3"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
