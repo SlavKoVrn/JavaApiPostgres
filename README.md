@@ -91,3 +91,5 @@ DELETE /api/users?userID=anyUUID
 
 Для сборки проекта spring: [https://start.spring.io/](https://start.spring.io/)
 
+<img src="initializr.png" width="100%"/>
+
