@@ -1,56 +1,42 @@
 package skillsrock.apiusers.service;
 
-import skillsrock.apiusers.model.UserRequest;
-import skillsrock.apiusers.model.UserResponse;
-import skillsrock.apiusers.exception.UserNotFoundException;
+import skillsrock.apiusers.model.User;
+import skillsrock.apiusers.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
 
-    private final Map<String, UserResponse> userStore = new HashMap<>();
+    @Autowired
+    private UserRepository userRepository;
 
-    public UserResponse createNewUser(UserRequest request) {
-        String userID = UUID.randomUUID().toString();
-        UserResponse user = new UserResponse(userID, request.getName(), request.getEmail());
-        userStore.put(userID, user);
-        return user;
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 
-    // Новый метод: получить всех пользователей
-    public Collection<UserResponse> getAllUsers() {
-        return userStore.values();
+    public Optional<User> getUserById(Integer id) {
+        return userRepository.findById(id);
     }
 
-    public UserResponse getUserById(String userID) {
-        UserResponse user = userStore.get(userID);
-        if (user == null) {
-            throw new UserNotFoundException("User not found with ID: " + userID);
-        }
-        return user;
+    public User createUser(User user) {
+        return userRepository.save(user);
     }
 
-    public UserResponse updateUserDetails(UserRequest request) {
-        String userID = request.getUserID();
-        UserResponse existing = getUserById(userID);
-        UserResponse updated = new UserResponse(
-                userID,
-                request.getName(),
-                request.getEmail()
-        );
-        userStore.put(userID, updated);
-        return updated;
+    public User updateUser(Integer id, User userDetails) {
+        User user = userRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("User not found"));
+        user.setFullName(userDetails.getFullName());
+        user.setPhoneNumber(userDetails.getPhoneNumber());
+        user.setAvatarUrl(userDetails.getAvatarUrl());
+        user.setRoleId(userDetails.getRoleId());
+        return userRepository.save(user);
     }
 
-    public void deleteUserById(String userID) {
-        if (!userStore.containsKey(userID)) {
-            throw new UserNotFoundException("User not found with ID: " + userID);
-        }
-        userStore.remove(userID);
+    public void deleteUser(Integer id) {
+        userRepository.deleteById(id);
     }
 }

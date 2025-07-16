@@ -1,53 +1,41 @@
 package skillsrock.apiusers.controller;
 
-import skillsrock.apiusers.model.UserRequest;
-import skillsrock.apiusers.model.UserResponse;
+import skillsrock.apiusers.model.User;
 import skillsrock.apiusers.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.HttpStatus;
 
-import java.util.UUID;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
 public class UserController {
 
-    private final UserService userService;
-
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+    @Autowired
+    private UserService userService;
 
     // POST /api/createNewUser
     @PostMapping("/createNewUser")
-    public UserResponse createNewUser(@RequestBody UserRequest userRequest) {
-        return userService.createNewUser(userRequest);
+    public User createUser(@RequestBody User user) {
+        return userService.createUser(user);
     }
 
+    // GET /api/users?userID=anyUUID
     @GetMapping("/users")
-    public ResponseEntity<?> getUsers(@RequestParam(required = false) String userID) {
-        if (userID == null || userID.isEmpty()) {
-            return ResponseEntity.ok(userService.getAllUsers());
-        } else {
-            UserResponse user = userService.getUserById(userID);
-            if (user == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body("User not found with ID: " + userID);
-            }
-            return ResponseEntity.ok(user);
-        }
+    public User getUserById(@RequestParam Integer userID) {
+        return userService.getUserById(userID)
+                .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
     // PUT /api/userDetailsUpdate
     @PutMapping("/userDetailsUpdate")
-    public UserResponse updateUserDetails(@RequestBody UserRequest userRequest) {
-        return userService.updateUserDetails(userRequest);
+    public User updateUser(@RequestParam Integer userID, @RequestBody User userDetails) {
+        return userService.updateUser(userID, userDetails);
     }
 
     // DELETE /api/users?userID=anyUUID
     @DeleteMapping("/users")
-    public void deleteUserById(@RequestParam String userID) {
-        userService.deleteUserById(userID);
+    public void deleteUser(@RequestParam Integer userID) {
+        userService.deleteUser(userID);
     }
 }
