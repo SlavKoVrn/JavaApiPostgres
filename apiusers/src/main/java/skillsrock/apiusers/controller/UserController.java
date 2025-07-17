@@ -23,7 +23,7 @@ public class UserController {
         return userService.createUser(user);
     }
 
-    // GET /api/users?userID=123
+    // GET /api/users?userID=anyUUID
     @GetMapping("/users")
     public ResponseEntity<?> getUsers(@RequestParam(required = false) Integer userID) {
         if (userID == null) {
@@ -39,7 +39,7 @@ public class UserController {
         }
     }
 
-    // PUT /api/userDetailsUpdate?userID=123
+    // PUT /api/userDetailsUpdate?userID=anyUUID
     @PutMapping("/userDetailsUpdate")
     public ResponseEntity<?> updateUser(
             @RequestParam Integer userID,
@@ -52,7 +52,7 @@ public class UserController {
         return ResponseEntity.ok(updatedUser);
     }
 
-    // DELETE /api/users?userID=123
+    // DELETE /api/users?userID=anyUUID
     @DeleteMapping("/users")
     public ResponseEntity<String> deleteUser(@RequestParam Integer userID) {
         Optional<User> userOptional = userService.getUserById(userID);
