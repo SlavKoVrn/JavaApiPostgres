@@ -22,12 +22,12 @@ class ApiusersApplicationTests {
     // POST /api/createNewUser
     @Test
     void testCreateUser_WithPOJO_Returns200() throws Exception {
-        System.out.println("testCreateUser_WithPOJO_Returns200");
+        System.out.println("1. testCreateUser_WithPOJO_Returns200");
         // Create Java object
         UserRequest request = new UserRequest();
         request.setFullName("Jane Smith");
         request.setPhoneNumber("+0987654321");
-        request.setAvatarUrl("https://example.com/avatar2.jpg ");
+        request.setAvatarUrl("https://example.com/avatar2.jpg");
         request.setRoleId(2);
 
         // Convert to JSON
@@ -44,13 +44,14 @@ class ApiusersApplicationTests {
             .statusCode(200)
             .body("fullName", equalTo("Jane Smith"))
             .body("phoneNumber", equalTo("+0987654321"))
-            .body("avatarUrl", equalTo("https://example.com/avatar2.jpg "))
+            .body("avatarUrl", equalTo("https://example.com/avatar2.jpg"))
             .body("roleId", equalTo(2));
     }
     
+    // GET /api/users (all users)
     @Test
     void testGetAllUsers_ReturnsOkStatus() {
-        System.out.println("testGetAllUsers_ReturnsOkStatus");
+        System.out.println("2. testGetAllUsers_ReturnsOkStatus");
     	Response response = given()
                 .when()
                     .get("/api/users")
@@ -70,7 +71,7 @@ class ApiusersApplicationTests {
     // GET /api/users (all users)
     @Test
     void testGetAllUsers_ReturnsListOfUsers() {
-        System.out.println("testGetAllUsers_ReturnsListOfUsers");
+        System.out.println("3. testGetAllUsers_ReturnsListOfUsers");
         given()
         .when()
             .get("/api/users")
@@ -79,5 +80,34 @@ class ApiusersApplicationTests {
             .body("$.size()", greaterThanOrEqualTo(1));
     }
 
+    // PUT /api/userDetailsUpdate?userID=anyUUID
+    @Test
+    void testUpdateUser_WithPOJO_ReturnsUpdatedData() throws Exception {
+        System.out.println("4. testUpdateUser_WithPOJO_ReturnsUpdatedData");
+        // Create request object
+        UserRequest request = new UserRequest();
+        request.setFullName("Jane Updated");
+        request.setPhoneNumber("+9876543210");
+        request.setAvatarUrl("https://example.com/jane-updated.jpg");
+        request.setRoleId(2);
+
+        // Convert to JSON
+        ObjectMapper mapper = new ObjectMapper();
+        String requestBody = mapper.writeValueAsString(request);
+
+        // Send request
+        given()
+            .contentType("application/json")
+            .queryParam("userID", 1)
+            .body(requestBody)
+        .when()
+            .put("/api/userDetailsUpdate")
+        .then()
+            .statusCode(200)
+            .body("fullName", equalTo("Jane Updated"))
+            .body("phoneNumber", equalTo("+9876543210"))
+            .body("avatarUrl", equalTo("https://example.com/jane-updated.jpg"))
+            .body("roleId", equalTo(2));
+    }
 
 }
