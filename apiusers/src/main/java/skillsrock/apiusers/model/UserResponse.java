@@ -1,18 +1,28 @@
 package skillsrock.apiusers.model;
 
 public class UserResponse {
-    private String userID;
-    private String name;
-    private String email;
 
-    public UserResponse(String userID, String name, String email) {
-        this.userID = userID;
-        this.name = name;
-        this.email = email;
+    private Integer uuid;
+    private String fullName;
+    private String phoneNumber;
+    private String avatarUrl;
+    private Integer roleId;
+
+    // Constructor from User entity
+    public UserResponse(Integer uuid, String fullName, String phoneNumber, String avatarUrl, Integer roleId) {
+        this.uuid = uuid;
+        this.fullName = fullName;
+        this.phoneNumber = phoneNumber;
+        this.avatarUrl = avatarUrl;
+        this.roleId = roleId;
     }
 
     // Getters
-    public String getUserID() { return userID; }
-    public String getName() { return name; }
-    public String getEmail() { return email; }
+    public Integer getUuid() { return uuid; }
+    public String getFullName() { return fullName; }
+    public String getPhoneNumber() { return phoneNumber; }
+    public String getAvatarUrl() { return avatarUrl; }
+    public Integer getRoleId() { return roleId; }
+
+    // Optional: Add setters if needed
 }

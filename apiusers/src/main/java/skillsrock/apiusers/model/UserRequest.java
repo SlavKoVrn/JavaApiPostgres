@@ -1,17 +1,21 @@
 package skillsrock.apiusers.model;
 
 public class UserRequest {
-    private String userID;
-    private String name;
-    private String email;
 
-    // Getters and Setters
-    public String getUserID() { return userID; }
-    public void setUserID(String userID) { this.userID = userID; }
+    private String fullName;
+    private String phoneNumber;
+    private String avatarUrl;
+    private Integer roleId;
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    // Getters
+    public String getFullName() { return fullName; }
+    public String getPhoneNumber() { return phoneNumber; }
+    public String getAvatarUrl() { return avatarUrl; }
+    public Integer getRoleId() { return roleId; }
 
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    // Setters
+    public void setFullName(String fullName) { this.fullName = fullName; }
+    public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
+    public void setAvatarUrl(String avatarUrl) { this.avatarUrl = avatarUrl; }
+    public void setRoleId(Integer roleId) { this.roleId = roleId; }
 }
