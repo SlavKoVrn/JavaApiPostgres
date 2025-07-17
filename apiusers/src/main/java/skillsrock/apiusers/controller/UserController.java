@@ -4,6 +4,7 @@ import skillsrock.apiusers.model.User;
 import skillsrock.apiusers.model.UserRequest;
 import skillsrock.apiusers.model.UserResponse;
 import skillsrock.apiusers.service.UserService;
+import skillsrock.apiusers.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
@@ -48,8 +49,9 @@ public class UserController {
         } else {
             Optional<User> userOptional = userService.getUserById(userID);
             if (userOptional.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body("User not found with ID: " + userID);
+            	throw new UserNotFoundException("User not found with ID: " + userID);
+            	/*return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("User not found with ID: " + userID);*/
             }
             return ResponseEntity.ok(userOptional.get());
         }
