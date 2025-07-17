@@ -47,21 +47,25 @@ public class UserController {
             List<User> allUsers = userService.getAllUsers();
             return ResponseEntity.ok(allUsers);
         } else {
-            Optional<User> userOptional = userService.getUserById(userID);
-            if (userOptional.isEmpty()) {
+            User user = userService.getUserById(userID);
+            if (user == null) {
             	throw new UserNotFoundException("User not found with ID: " + userID);
-            	/*return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body("User not found with ID: " + userID);*/
             }
-            return ResponseEntity.ok(userOptional.get());
+            return ResponseEntity.ok(user);
         }
     }
 
     // PUT /api/userDetailsUpdate?userID=anyUUID
     @PutMapping("/userDetailsUpdate")
     public UserResponse updateUser(@RequestParam Integer userID, @RequestBody UserRequest request) {
-        User user = userService.getUserById(userID)
-            .orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userService.getUserById(userID);
+        if (user == null) {
+        	throw new UserNotFoundException("User not found with ID: " + userID);
+        	/*
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("User not found with ID: " + userID);
+                    */
+        }
 
         user.setFullName(request.getFullName());
         user.setPhoneNumber(request.getPhoneNumber());
@@ -94,10 +98,9 @@ public class UserController {
     // DELETE /api/users?userID=anyUUID
     @DeleteMapping("/users")
     public ResponseEntity<String> deleteUser(@RequestParam Integer userID) {
-        Optional<User> userOptional = userService.getUserById(userID);
-        if (userOptional.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("User not found with ID: " + userID);
+        User user = userService.getUserById(userID);
+        if (user == null) {
+        	throw new UserNotFoundException("User not found with ID: " + userID);
         }
 
         userService.deleteUser(userID); // assuming this method returns void

@@ -160,7 +160,7 @@ class ApiusersApplicationTests {
             .delete("/api/users")
         .then()
             .statusCode(404)
-            .body(equalTo("User not found with ID: 9999"));
+            .body("message", equalTo("User not found with ID: 9999"));
     }
 
 }
