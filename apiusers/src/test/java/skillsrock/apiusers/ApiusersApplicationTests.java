@@ -110,4 +110,57 @@ class ApiusersApplicationTests {
 
     }
 
+    // DELETE /api/users?userID=anyUUID
+    @Test
+    void testDeleteUser_UserExists_ReturnsSuccessMessage() throws Exception {
+        System.out.println("5. testDeleteUser_UserExists_ReturnsSuccessMessage");
+
+        UserRequest request = new UserRequest();
+        request.setFullName("Jane Smith for delete");
+        request.setPhoneNumber("+0987654321 for delete");
+        request.setAvatarUrl("https://example.com/avatar2.jpg for delete");
+        request.setRoleId(2);
+
+        // Convert to JSON
+        ObjectMapper mapper = new ObjectMapper();
+        String requestBody = mapper.writeValueAsString(request);
+
+        // Send request
+        Response response = given()
+            .contentType("application/json")
+            .body(requestBody)
+        .when()
+            .post("/api/createNewUser")
+        .then()
+            .statusCode(200)
+            .body("fullName", equalTo("Jane Smith for delete"))
+            .body("phoneNumber", equalTo("+0987654321 for delete"))
+            .body("avatarUrl", equalTo("https://example.com/avatar2.jpg for delete"))
+            .body("roleId", equalTo(2)).extract().response();
+        
+        Integer createdUserId = response.jsonPath().get("uuid");
+        System.out.println("Created User ID for delete: " + createdUserId);
+
+        given()
+            .queryParam("userID", createdUserId)
+        .when()
+            .delete("/api/users")
+        .then()
+            .statusCode(200)
+            .body(equalTo("User deleted successfully"));
+    }
+
+    // Test deletion of non-existent user
+    @Test
+    void testDeleteUser_UserDoesNotExist_ReturnsNotFound() {
+        System.out.println("6. testDeleteUser_UserDoesNotExist_ReturnsNotFound");
+        given()
+            .queryParam("userID", 9999)
+        .when()
+            .delete("/api/users")
+        .then()
+            .statusCode(404)
+            .body(equalTo("User not found with ID: 9999"));
+    }
+
 }
