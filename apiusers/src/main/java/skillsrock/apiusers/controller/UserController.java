@@ -57,8 +57,8 @@ public class UserController {
 
     // PUT /api/userDetailsUpdate?userID=anyUUID
     @PutMapping("/userDetailsUpdate")
-    public UserResponse updateUser(@RequestParam Integer uuid, @RequestBody UserRequest request) {
-        User user = userService.getUserById(uuid)
+    public UserResponse updateUser(@RequestParam Integer userID, @RequestBody UserRequest request) {
+        User user = userService.getUserById(userID)
             .orElseThrow(() -> new RuntimeException("User not found"));
 
         user.setFullName(request.getFullName());
@@ -66,7 +66,7 @@ public class UserController {
         user.setAvatarUrl(request.getAvatarUrl());
         user.setRoleId(request.getRoleId());
 
-        User updatedUser = userService.updateUser(uuid, user);
+        User updatedUser = userService.updateUser(userID, user);
 
         return new UserResponse(
             updatedUser.getUuid(),
