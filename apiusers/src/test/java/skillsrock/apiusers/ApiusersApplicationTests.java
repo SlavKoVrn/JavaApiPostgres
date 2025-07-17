@@ -16,16 +16,18 @@ class ApiusersApplicationTests {
 
     @Test
     void testGetAllUsers_ReturnsOkStatus() {
-        System.out.println("test begins");
-        given()
-            .when()
-                .get("/api/users")
-            .then()
-                .statusCode(200);
-    }
+    	Response response = given()
+                .when()
+                    .get("/api/users")
+                .then()
+                    .statusCode(200)
+                    .extract().response();
 
-	@Test
-	void contextLoads() {
-	}
+            // Get response body as String
+            String responseBody = response.getBody().asString();
+
+            // Print response body to console
+            System.out.println("Response Body: " + responseBody);
+    }
 
 }
