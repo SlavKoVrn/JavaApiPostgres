@@ -123,3 +123,21 @@ mvnw test
 mvnw test -Dtest=skillsrock.apiusers.CascadeDeleteTest
 mvnw test -Dtest=skillsrock.apiusers.UserServiceCacheTest
 ```
+
+### Docker
+
+компилировать иполняемый файл
+ 
+#### target/apiusers-0.0.1-SNAPSHOT.jar
+
+```bash
+cd apiusers
+mvnw clean package -DskipTests
+```
+
+#### запуск docker
+
+```bash
+cd apiusers
+docker-compose up -d
+```
