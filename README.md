@@ -93,3 +93,31 @@ DELETE /api/users?userID=anyUUID
 
 <img src="initializr.png" width="100%"/>
 
+### Установка Java JDK
+
+#### скачать установку [Java JDK](https://www.oracle.com/fr/java/technologies/downloads/) официальный сайт
+
+### Установка PostgreSQL
+
+#### скачать установку [PostgreSQL](https://www.enterprisedb.com/downloads/postgres-postgresql-downloads/) официальный сайт
+
+созданиие базы данных users
+
+```bash
+CREATE DATABASE users;
+```
+
+### Запуск приложения Spring-boot REST API Web server
+
+```bash
+git clone https://github.com/SlavKoVrn/JavaApiPostgres apiusers
+cd apiusers
+mvnw spring-boot:run
+```
+
+### Запуск тестов приложения
+
+```bash
+cd apiusers
+mvnw test
+```
