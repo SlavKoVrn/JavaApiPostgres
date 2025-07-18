@@ -120,4 +120,5 @@ mvnw spring-boot:run
 ```bash
 cd apiusers
 mvnw test
+mvnw test -Dtest=skillsrock.apiusers.CascadeDeleteTest
 ```

@@ -25,14 +25,23 @@
             </column>
             <column name="phonenumber" type="VARCHAR(255)"/>
             <column name="avatar" type="VARCHAR(255)"/>
-            <column name="role" type="INTEGER">
-                <constraints foreignKeyName="fk_users_roles" references="roles(uuid)"/>
-            </column>
+            <column name="role" type="INTEGER"/>
         </createTable>
     </changeSet>
 
-    <!-- Changeset to insert roles -->
+    <!-- Changeset to add foreign key with cascade -->
     <changeSet id="2" author="you">
+        <addForeignKeyConstraint
+            baseTableName="users"
+            baseColumnNames="role"
+            constraintName="fk_users_roles"
+            referencedTableName="roles"
+            referencedColumnNames="uuid"
+            onDelete="CASCADE"/>
+    </changeSet>    
+
+    <!-- Changeset to insert roles -->
+    <changeSet id="3" author="you">
         <insert tableName="roles">
             <column name="rolename" value="ADMIN"/>
         </insert>
@@ -45,7 +54,7 @@
     </changeSet>
 
     <!-- Changeset to insert users -->
-    <changeSet id="3" author="you">
+    <changeSet id="4" author="you">
         <insert tableName="users">
             <column name="fio" value="Иван Иванов"/>
             <column name="phonenumber" value="+7(900)123-45-67"/>
