@@ -121,4 +121,5 @@ mvnw spring-boot:run
 cd apiusers
 mvnw test
 mvnw test -Dtest=skillsrock.apiusers.CascadeDeleteTest
+mvnw test -Dtest=skillsrock.apiusers.UserServiceCacheTest
 ```
