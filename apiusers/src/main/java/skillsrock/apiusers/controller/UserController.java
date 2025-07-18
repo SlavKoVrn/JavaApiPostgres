@@ -5,6 +5,7 @@ import skillsrock.apiusers.model.UserRequest;
 import skillsrock.apiusers.model.UserResponse;
 import skillsrock.apiusers.service.UserService;
 import skillsrock.apiusers.exception.UserNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
@@ -61,10 +62,6 @@ public class UserController {
         User user = userService.getUserById(userID);
         if (user == null) {
         	throw new UserNotFoundException("User not found with ID: " + userID);
-        	/*
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("User not found with ID: " + userID);
-                    */
         }
 
         user.setFullName(request.getFullName());
@@ -82,18 +79,6 @@ public class UserController {
             updatedUser.getRoleId()
         );
     }
-    /*
-    public ResponseEntity<?> updateUser(
-            @RequestParam Integer userID,
-            @RequestBody User userDetails) {
-        User updatedUser = userService.updateUser(userID, userDetails);
-        if (updatedUser == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("User not found with ID: " + userID);
-        }
-        return ResponseEntity.ok(updatedUser);
-    }
-    */
 
     // DELETE /api/users?userID=anyUUID
     @DeleteMapping("/users")
@@ -103,7 +88,7 @@ public class UserController {
         	throw new UserNotFoundException("User not found with ID: " + userID);
         }
 
-        userService.deleteUser(userID); // assuming this method returns void
+        userService.deleteUser(userID);
         return ResponseEntity.ok("User deleted successfully");
     }
 }

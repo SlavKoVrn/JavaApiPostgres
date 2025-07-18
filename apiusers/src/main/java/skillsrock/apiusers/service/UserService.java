@@ -22,13 +22,8 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    /*public Optional<User> getUserById(Integer id) {
-        return userRepository.findById(id);
-    }*/
-    
     @Cacheable("users")
     public User getUserById(Integer id) {
-        System.out.println("Fetching user from DB for ID: " + id);
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + id));
         return user;
@@ -38,7 +33,6 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    // Update user and update cache
     @CachePut("users")
     public User updateUser(Integer id, User userDetails) {
         User user = userRepository.findById(id)
