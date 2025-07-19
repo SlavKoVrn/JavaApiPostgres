@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 import java.util.Optional;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api")
@@ -23,7 +24,7 @@ public class UserController {
 
     // POST /api/createNewUser
     @PostMapping("/createNewUser")
-    public UserResponse createUser(@RequestBody UserRequest request) {
+    public UserResponse createUser(@Valid @RequestBody UserRequest request) {
         User user = new User();
         user.setFullName(request.getFullName());
         user.setPhoneNumber(request.getPhoneNumber());
@@ -58,7 +59,7 @@ public class UserController {
 
     // PUT /api/userDetailsUpdate?userID=anyUUID
     @PutMapping("/userDetailsUpdate")
-    public UserResponse updateUser(@RequestParam Integer userID, @RequestBody UserRequest request) {
+    public UserResponse updateUser(@RequestParam Integer userID, @Valid @RequestBody UserRequest request) {
         User user = userService.getUserById(userID);
         if (user == null) {
         	throw new UserNotFoundException("User not found with ID: " + userID);

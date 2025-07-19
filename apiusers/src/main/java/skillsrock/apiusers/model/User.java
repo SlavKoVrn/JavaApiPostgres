@@ -3,6 +3,7 @@ package skillsrock.apiusers.model;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "users")
@@ -14,12 +15,15 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer uuid;
 
+    @Size(max = 255, message = "Full name cannot exceed 255 characters")
     @Column(name = "fio", nullable = false)
     private String fullName;
 
+    @Size(max = 255, message = "Phone number cannot exceed 255 characters")
     @Column(name = "phonenumber")
     private String phoneNumber;
 
+    @Size(max = 255, message = "Avatar url cannot exceed 255 characters")
     @Column(name = "avatar")
     private String avatarUrl;
 
