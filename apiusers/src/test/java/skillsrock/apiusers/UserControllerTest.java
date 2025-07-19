@@ -55,8 +55,8 @@ public class UserControllerTest {
 
         ResultActions result = mockMvc.perform(post("/api/createNewUser")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)));
-                //.andExpect(status().isBadRequest());
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
 
         result.andDo(print());
     }
