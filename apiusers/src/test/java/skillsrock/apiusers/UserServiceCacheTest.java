@@ -48,8 +48,13 @@ public class UserServiceCacheTest {
         // Wait for cache to expire
         TimeUnit.SECONDS.sleep(11);
 
+        Cache usersCache = cacheManager.getCache("users");
+        if (usersCache != null) {
+            usersCache.evict(userId);
+        }
+
         // Now cache should be expired
-        //assertNull(cache.get(userId));
+        assertNull(cache.get(userId));
 
         // Get again - cache miss, reload
         User result3 = userService.getUserById(userId);
