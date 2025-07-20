@@ -35,11 +35,12 @@ public class UserControllerTest {
         request.setAvatarUrl("http://example.com/avatar.jpg");
         request.setRoleId(1);
 
-        mockMvc.perform(post("/api/createNewUser")
+        ResultActions result = mockMvc.perform(post("/api/createNewUser")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.fullName").value(validName));
+        result.andDo(print());
     }
 
     @Test
