@@ -13,14 +13,25 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import jakarta.validation.Valid;
+import jakarta.validation.Validator;
+import jakarta.validation.ConstraintViolation;
+import org.springframework.validation.annotation.Validated;
 
 @RestController
 @RequestMapping("/api")
+@Validated
 public class UserController {
 
     @Autowired
     private UserService userService;
+
+    private final Validator validator;
+
+    public UserController(Validator validator) {
+        this.validator = validator;
+    }
 
     // POST /api/createNewUser
     @PostMapping("/createNewUser")
@@ -63,7 +74,7 @@ public class UserController {
     @PutMapping("/userDetailsUpdate")
     public UserResponse updateUser(
         @RequestParam Integer userID,
-        @RequestBody(required = false) UserRequest bodyRequest,
+        @Valid @RequestBody(required = false) UserRequest bodyRequest,
         @RequestParam(required = false) String fullName,
         @RequestParam(required = false) String phoneNumber,
         @RequestParam(required = false) String avatarUrl,
@@ -72,6 +83,23 @@ public class UserController {
         User user = userService.getUserById(userID);
         if (user == null) {
             throw new UserNotFoundException("User not found with ID: " + userID);
+        }
+
+        UserRequest request = new UserRequest();
+        request.setFullName(fullName);
+        request.setPhoneNumber(phoneNumber);
+        request.setAvatarUrl(avatarUrl);
+        request.setRoleId(roleId);
+
+        // Manually validate using Jakarta Bean Validation
+        Set<ConstraintViolation<UserRequest>> violations = validator.validate(request);
+
+        if (!violations.isEmpty()) {
+            StringBuilder sb = new StringBuilder();
+            for (ConstraintViolation<UserRequest> violation : violations) {
+                sb.append(violation.getMessage()).append("; ");
+            }
+            throw new IllegalArgumentException(sb.toString().trim());
         }
     
         // Use query params if provided, otherwise use bodyRequest
