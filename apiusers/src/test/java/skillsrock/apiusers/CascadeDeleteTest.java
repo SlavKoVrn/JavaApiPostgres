@@ -1,68 +1,57 @@
 package skillsrock.apiusers;
 
 import org.junit.jupiter.api.*;
-import java.sql.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
+
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
 public class CascadeDeleteTest {
 
-    private static Connection connection;
+    @Autowired
+    private DataSource dataSource;
 
-    @BeforeAll
-    public static void setup() throws Exception {
-        String url = "jdbc:postgresql://localhost:5432/users";
-        String user = "postgres";
-        String password = "password";
-        connection = DriverManager.getConnection(url, user, password);
+    private JdbcTemplate jdbcTemplate;
+
+    @BeforeEach
+    public void setup() throws SQLException {
+        jdbcTemplate = new JdbcTemplate(dataSource);
         clearData();
         insertTestData();
     }
 
-    @AfterAll
-    public static void teardown() throws Exception {
+    @AfterEach
+    public void teardown() throws SQLException {
         clearData();
-        if (connection != null && !connection.isClosed()) {
-            connection.close();
-        }
     }
 
-    private static void clearData() throws Exception {
-        try (Statement stmt = connection.createStatement()) {
-            stmt.execute("DELETE FROM users");
-            stmt.execute("DELETE FROM roles");
-        }
+    private void clearData() {
+        jdbcTemplate.update("DELETE FROM users");
+        jdbcTemplate.update("DELETE FROM roles");
     }
 
-    private static void insertTestData() throws Exception {
-        try (PreparedStatement psRole = connection.prepareStatement("INSERT INTO roles (uuid, rolename) VALUES (?, ?)");
-             PreparedStatement psUser = connection.prepareStatement("INSERT INTO users (uuid, fio, phonenumber, avatar, role) VALUES (?, ?, ?, ?, ?)")) {
+    private void insertTestData() {
+        // Insert role
+        jdbcTemplate.update("INSERT INTO roles (uuid, rolename) VALUES (?, ?)", 1, "TEST_ROLE");
 
-            // Insert role
-            psRole.setInt(1, 1);
-            psRole.setString(2, "TEST_ROLE");
-            psRole.executeUpdate();
-
-            // Insert user
-            psUser.setInt(1, 1);
-            psUser.setString(2, "Test User");
-            psUser.setString(3, "+123456789");
-            psUser.setString(4, "http://example.com/avatar.png");
-            psUser.setInt(5, 1);
-            psUser.executeUpdate();
-        }
+        // Insert user
+        jdbcTemplate.update("INSERT INTO users (uuid, fio, phonenumber, avatar, role) VALUES (?, ?, ?, ?, ?)",
+                1, "Test User", "+123456789", "http://example.com/avatar.png", 1);
     }
 
     @Test
-    public void testCascadeDelete() throws Exception {
+    public void testCascadeDelete() {
         // Delete the role
-        try (PreparedStatement ps = connection.prepareStatement("DELETE FROM roles WHERE uuid = ?")) {
-            ps.setInt(1, 1);
-            ps.executeUpdate();
-        }
+        jdbcTemplate.update("DELETE FROM roles WHERE uuid = ?", 1);
 
-        try (Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT * FROM users WHERE uuid = 1")) {
-            assertFalse(rs.next(), "User should have been deleted due to cascade.");
-        }
+        Integer userCount = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM users WHERE uuid = ?", Integer.class, 1);
+
+        assertEquals(0, userCount, "User should have been deleted due to cascade.");
     }
 }
