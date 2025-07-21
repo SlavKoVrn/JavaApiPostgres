@@ -156,3 +156,33 @@ docker-compose build
 # Start the services
 docker-compose up -d
 ```
+
+#### проверить базу данных
+
+```bash
+docker exec -it postgresdb psql -U postgres
+
+psql (10.21 (Debian 10.21-1.pgdg90+1))
+Type "help" for help.
+
+postgres=# \c users
+You are now connected to database "users" as user "postgres".
+
+users=# SELECT * FROM roles;
+ uuid | rolename
+------+-----------
+    1 | ADMIN
+    2 | USER
+    3 | MODERATOR
+(3 rows)
+
+users=# SELECT * FROM users;
+ uuid |         fio         |   phonenumber    |                   avatar                   | role
+------+---------------------+------------------+--------------------------------------------+------
+    2 | Петр Петров         | +7(987)654-32-10 | https://www.kadastrcard.ru/img/avatar2.png |    2
+    3 | Сидор Сидоров       | +7(912)345-67-89 | https://www.kadastrcard.ru/img/avatar3.png |    3
+    1 | Вячеслав Колесников | +7(960)109-12-05 | https://www.kadastrcard.ru/img/slavko.png  |    2
+(3 rows)
+```
+
+
