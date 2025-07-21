@@ -101,7 +101,17 @@ DELETE /api/users?userID=anyUUID
 
 #### скачать установку [PostgreSQL](https://www.enterprisedb.com/downloads/postgres-postgresql-downloads/) официальный сайт
 
-созданиие базы данных users
+#### параметры соединения с базой данных
+
+###### apiusers/src/main/resources/application.properties
+
+```bash
+spring.datasource.url=jdbc:postgresql://localhost:5432/users
+spring.datasource.username=postgres
+spring.datasource.password=password
+```
+
+###### созданиие базы данных users
 
 ```bash
 CREATE DATABASE users;
