@@ -58,20 +58,30 @@ public class UserController {
     }
 
     // PUT /api/userDetailsUpdate?userID=anyUUID
+    // OR
+    // PUT /api/userDetailsUpdate?userID=anyUUID&fullName=John&phoneNumber=123
     @PutMapping("/userDetailsUpdate")
-    public UserResponse updateUser(@RequestParam Integer userID, @Valid @RequestBody UserRequest request) {
+    public UserResponse updateUser(
+        @RequestParam Integer userID,
+        @RequestBody(required = false) UserRequest bodyRequest,
+        @RequestParam(required = false) String fullName,
+        @RequestParam(required = false) String phoneNumber,
+        @RequestParam(required = false) String avatarUrl,
+        @RequestParam(required = false) Integer roleId
+    ) {
         User user = userService.getUserById(userID);
         if (user == null) {
-        	throw new UserNotFoundException("User not found with ID: " + userID);
+            throw new UserNotFoundException("User not found with ID: " + userID);
         }
-
-        user.setFullName(request.getFullName());
-        user.setPhoneNumber(request.getPhoneNumber());
-        user.setAvatarUrl(request.getAvatarUrl());
-        user.setRoleId(request.getRoleId());
-
+    
+        // Use query params if provided, otherwise use bodyRequest
+        user.setFullName((fullName != null) ? fullName : (bodyRequest != null ? bodyRequest.getFullName() : user.getFullName()));
+        user.setPhoneNumber((phoneNumber != null) ? phoneNumber : (bodyRequest != null ? bodyRequest.getPhoneNumber() : user.getPhoneNumber()));
+        user.setAvatarUrl((avatarUrl != null) ? avatarUrl : (bodyRequest != null ? bodyRequest.getAvatarUrl() : user.getAvatarUrl()));
+        user.setRoleId((roleId != null) ? roleId : (bodyRequest != null ? bodyRequest.getRoleId() : user.getRoleId()));
+    
         User updatedUser = userService.updateUser(userID, user);
-
+    
         return new UserResponse(
             updatedUser.getUuid(),
             updatedUser.getFullName(),
