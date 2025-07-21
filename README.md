@@ -149,5 +149,10 @@ mvnw clean package -DskipTests
 
 ```bash
 cd apiusers
+
+# Build the Spring Boot image
+docker-compose build
+
+# Start the services
 docker-compose up -d
 ```
