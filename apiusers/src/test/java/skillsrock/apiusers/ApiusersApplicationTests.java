@@ -96,11 +96,45 @@ class ApiusersApplicationTests {
         .when()
             .put("/api/userDetailsUpdate")
         .then()
-            /*.statusCode(200)
+            .statusCode(200)
             .body("fullName", equalTo("Jane Updated"))
             .body("phoneNumber", equalTo("+9876543210"))
             .body("avatarUrl", equalTo("https://example.com/jane-updated.jpg"))
-            .body("roleId", equalTo(2))*/
+            .body("roleId", equalTo(2))
+            .extract().response();
+
+        String responseBody = response.getBody().asString();
+        System.out.println("##############################");
+        System.out.println("Response Body: " + responseBody);
+        System.out.println("##############################");
+
+    }
+
+    // PUT /api/userDetailsUpdate?userID=anyUUID&fullName=JohnDoe&phoneNumber=+1234567890
+    @Test
+    void testUpdateUser_WithGetParams_ReturnsUpdatedData() {
+        System.out.println("5. testUpdateUser_WithGetParams_ReturnsUpdatedData");
+    
+        Integer userId = 1;
+        String updatedName = "John Doe via Params";
+        String updatedPhone = "+1234567890";
+        String updatedAvatar = "https://example.com/avatar3.jpg ";
+        Integer updatedRoleId = 3;
+    
+        Response response = given()
+            .queryParam("userID", 1)
+            .queryParam("fullName", updatedName)
+            .queryParam("phoneNumber", updatedPhone)
+            .queryParam("avatarUrl", updatedAvatar)
+            .queryParam("roleId", updatedRoleId)
+        .when()
+            .put("/api/userDetailsUpdate")
+        .then()
+            .statusCode(200)
+            .body("fullName", equalTo(updatedName))
+            .body("phoneNumber", equalTo(updatedPhone))
+            .body("avatarUrl", equalTo(updatedAvatar))
+            .body("roleId", equalTo(updatedRoleId))
             .extract().response();
 
         String responseBody = response.getBody().asString();
