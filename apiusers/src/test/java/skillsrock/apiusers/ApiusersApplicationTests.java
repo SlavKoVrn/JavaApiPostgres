@@ -147,7 +147,7 @@ class ApiusersApplicationTests {
     // DELETE /api/users?userID=anyUUID
     @Test
     void testDeleteUser_UserExists_ReturnsSuccessMessage() throws Exception {
-        System.out.println("5. testDeleteUser_UserExists_ReturnsSuccessMessage");
+        System.out.println("6. testDeleteUser_UserExists_ReturnsSuccessMessage");
 
         UserRequest request = new UserRequest();
         request.setFullName("Jane Smith for delete");
@@ -187,7 +187,7 @@ class ApiusersApplicationTests {
     // Test deletion of non-existent user
     @Test
     void testDeleteUser_UserDoesNotExist_ReturnsNotFound() {
-        System.out.println("6. testDeleteUser_UserDoesNotExist_ReturnsNotFound");
+        System.out.println("7. testDeleteUser_UserDoesNotExist_ReturnsNotFound");
         given()
             .queryParam("userID", 9999)
         .when()

@@ -5,7 +5,7 @@
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
 
-    <!-- Changeset to create tables -->
+    <!-- Changeset 1: Create tables -->
     <changeSet id="1" author="you">
         <createTable tableName="roles">
             <column name="uuid" type="SERIAL">
@@ -29,8 +29,15 @@
         </createTable>
     </changeSet>
 
-    <!-- Changeset to add foreign key with cascade -->
+    <!-- NEW Changeset 2: Add index on users.role BEFORE foreign key -->
     <changeSet id="2" author="you">
+        <createIndex indexName="idx_users_role" tableName="users">
+            <column name="role"/>
+        </createIndex>
+    </changeSet>
+
+    <!-- Changeset 3: Add foreign key with cascade -->
+    <changeSet id="3" author="you">
         <addForeignKeyConstraint
             baseTableName="users"
             baseColumnNames="role"
@@ -40,8 +47,8 @@
             onDelete="CASCADE"/>
     </changeSet>    
 
-    <!-- Changeset to insert roles -->
-    <changeSet id="3" author="you">
+    <!-- Changeset 4: Insert roles -->
+    <changeSet id="4" author="you">
         <insert tableName="roles">
             <column name="rolename" value="ADMIN"/>
         </insert>
@@ -53,8 +60,8 @@
         </insert>
     </changeSet>
 
-    <!-- Changeset to insert users -->
-    <changeSet id="4" author="you">
+    <!-- Changeset 5: Insert users -->
+    <changeSet id="5" author="you">
         <insert tableName="users">
             <column name="fio" value="Иван Иванов"/>
             <column name="phonenumber" value="+7(900)123-45-67"/>
